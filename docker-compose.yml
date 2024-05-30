@@ -1,0 +1,152 @@
+version: "3.0"
+services:
+    nats:
+        image: nats-streaming:0.17.0
+        container_name: nats
+        ports:
+        - "4222:4222"
+        - "8222:8222"
+        command: [
+            "-p", "4222",
+            "-m", "8222",
+            "-hbi", "5s",
+            "-hbt", "5s",
+            "-hbf", "2",
+            "-SD",
+            "-cid", "ticketing"
+        ]
+
+    auth-mongo:
+        container_name: auth-mongo
+        image: mongo
+        restart: always
+        ports:
+        - "27017:27017"
+
+    auth:
+        build: 
+            context: ./auth
+            dockerfile: Dockerfile-dev
+        container_name: auth
+        working_dir: /home/node/auth
+        ports:
+        - "3000:3000"
+        volumes:
+            - ./auth:/home/node/auth
+        depends_on:
+            - auth-mongo
+        environment:
+            - HOST=0.0.0.0
+            - CHOKIDAR_USEPOLLING=true
+            - CHOKIDAR_INTERVAL=100
+            - MONGO_URI=mongodb://auth-mongo:27017/auth
+
+    client:
+        build: 
+            context: ./client
+            dockerfile: Dockerfile-dev
+        container_name: client
+        working_dir: /home/node/client
+        ports:
+        - "3001:3000"
+        volumes:
+            - ./client:/home/node/client
+        environment:
+            - HOST=0.0.0.0
+            - CHOKIDAR_USEPOLLING=true
+            - CHOKIDAR_INTERVAL=100
+
+    expiration-redis:
+        image: redis
+        container_name: expiration-redis
+        ports:
+        - "6379:6379"
+
+    expiration:
+        build: 
+            context: ./expiration
+            dockerfile: Dockerfile-dev
+        container_name: expiration
+        working_dir: /home/node/expiration
+        volumes:
+        - ./expiration:/home/node/expiration    
+        environment:
+        - NATS_CLIENT_ID=expiration
+        - NATS_URL=http://nats:4222
+        - NATS_CLUSTER_ID=ticketing
+        - REDIS_HOST=expiration-redis
+        depends_on:
+        - nats
+        - expiration-redis
+
+    orders-mongo:
+        container_name: orders-mongo
+        image: mongo
+        restart: always
+        ports:
+        - "27018:27017"
+
+    orders:
+        build: 
+            context: ./orders
+            dockerfile: Dockerfile-dev
+        container_name: orders
+        working_dir: /home/node/orders
+        environment:
+        - NATS_CLIENT_ID=orders
+        - NATS_URL=http://nats:4222
+        - NATS_CLUSTER_ID=ticketing
+        - MONGO_URI=mongodb://orders-mongo:27017/orders
+        ports:
+        - "3002:3000"
+        volumes:
+        - ./orders:/home/node/orders
+        depends_on:
+        - orders-mongo
+
+    payments-mongo:
+        container_name: payments-mongo
+        image: mongo
+        restart: always
+        ports:
+        - "27019:27017"
+
+    payments:
+        build: 
+            context: ./payments
+            dockerfile: Dockerfile-dev
+        container_name: payments
+        working_dir: /home/node/payments
+        environment:
+        - NATS_CLIENT_ID=payments
+        - NATS_URL=http://nats:4222
+        - NATS_CLUSTER_ID=ticketing
+        - MONGO_URI=mongodb://payments-mongo:27017/payments
+        ports:
+        - "3003:3000"
+        volumes:
+        - ./payments:/home/node/payments
+        depends_on:
+        - payments-mongo
+
+    tickets-mongo:
+        image: mongo
+        container_name: tickets-mongo
+        ports:
+        - "27020:27017"
+
+    tickets:
+        build: 
+            context: ./tickets
+            dockerfile: Dockerfile-dev
+        container_name: tickets
+        working_dir: /home/node/tickets
+        environment:
+        - NATS_CLIENT_ID=tickets
+        - NATS_URL=http://nats:4222
+        - NATS_CLUSTER_ID=ticketing
+        - MONGO_URI=mongodb://tickets-mongo:27017/tickets
+        ports:
+        - "3004:3000"
+        depends_on:
+        - tickets-mongo
