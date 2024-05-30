@@ -3,7 +3,7 @@ name: deploy-orders
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - 'orders/**'
 
@@ -16,8 +16,8 @@ jobs:
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      - run: cd orders && docker build -t rallycoding/orders .
-      - run: docker push rallycoding/orders
+      - run: cd orders && docker build -t skyglass/orders .
+      - run: docker push skyglass/orders
       - uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}

@@ -3,7 +3,7 @@ name: deploy-tickets
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - 'tickets/**'
 
@@ -16,8 +16,8 @@ jobs:
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      - run: cd tickets && docker build -t rallycoding/tickets .
-      - run: docker push rallycoding/tickets
+      - run: cd tickets && docker build -t skyglass/tickets .
+      - run: docker push skyglass/tickets
       - uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
