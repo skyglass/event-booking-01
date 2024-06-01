@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: client
-          image: $CONTAINER_REGISTRY/ticketing-client:$VERSION
+          image: $CONTAINER_REGISTRY/client:$VERSION
           imagePullPolicy: Always          
 ---
 apiVersion: v1
