@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: expiration
-          image: skyglass/expiration
+          image: $CONTAINER_REGISTRY/expiration:$VERSION
+          imagePullPolicy: Always          
           env:
             - name: NATS_CLIENT_ID
               valueFrom:

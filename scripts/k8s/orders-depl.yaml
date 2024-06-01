@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: orders
-          image: skyglass/orders
+          image: $CONTAINER_REGISTRY/orders:$VERSION
+          imagePullPolicy: Always          
           env:
             - name: NATS_CLIENT_ID
               valueFrom:

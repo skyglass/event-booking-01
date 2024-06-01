@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: client
-          image: skyglass/ticketing-client
+          image: $CONTAINER_REGISTRY/ticketing-client:$VERSION
+          imagePullPolicy: Always          
 ---
 apiVersion: v1
 kind: Service

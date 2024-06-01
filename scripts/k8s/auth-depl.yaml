@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: auth
-          image: skyglass/auth
+          image: $CONTAINER_REGISTRY/auth:$VERSION
+          imagePullPolicy: Always
           env:
             - name: MONGO_URI
               value: 'mongodb://auth-mongo-srv:27017/auth'

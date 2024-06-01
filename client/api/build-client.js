@@ -5,7 +5,7 @@ export default ({ req }) => {
     // We are on the server
 
     return axios.create({
-      baseURL: 'http://www.YOURDOMAIN.com',
+      baseURL: 'https://skycomposer.net',
       headers: req.headers,
     });
   } else {
