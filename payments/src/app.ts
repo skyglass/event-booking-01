@@ -6,12 +6,13 @@ import { errorHandler, NotFoundError, currentUser } from '@rallycoding/common';
 import { createChargeRouter } from './routes/new';
 
 const app = express();
+const inProduction = process.env.NODE_ENV === "production";
 app.set('trust proxy', true);
 app.use(json());
 app.use(
   cookieSession({
     signed: false,
-    secure: true,
+    secure: inProduction,
   })
 );
 app.use(currentUser);

@@ -9,12 +9,13 @@ import { newOrderRouter } from './routes/new';
 import { showOrderRouter } from './routes/show';
 
 const app = express();
+const inProduction = process.env.NODE_ENV === "production";
 app.set('trust proxy', true);
 app.use(json());
 app.use(
   cookieSession({
     signed: false,
-    secure: true,
+    secure: inProduction,
   })
 );
 app.use(currentUser);

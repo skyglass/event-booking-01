@@ -15,7 +15,10 @@ spec:
       containers:
         - name: client
           image: $CONTAINER_REGISTRY/client:$VERSION
-          imagePullPolicy: Always          
+          imagePullPolicy: Always    
+          env:
+            - name: BASE_URL
+              value: $BASE_URL
 ---
 apiVersion: v1
 kind: Service

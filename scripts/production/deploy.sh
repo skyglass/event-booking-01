@@ -28,8 +28,8 @@ set -u # or set -o nounset
 docker build -t $CONTAINER_REGISTRY/auth:$VERSION --file ../../auth/Dockerfile-prod ../../auth
 docker push $CONTAINER_REGISTRY/auth:$VERSION
 
-docker build -t $CONTAINER_REGISTRY/ticketing-client:$VERSION --file ../../client/Dockerfile-prod ../../client
-docker push $CONTAINER_REGISTRY/ticketing-client:$VERSION
+docker build -t $CONTAINER_REGISTRY/client:$VERSION --file ../../client/Dockerfile-prod ../../client
+docker push $CONTAINER_REGISTRY/client:$VERSION
 
 docker build -t $CONTAINER_REGISTRY/expiration:$VERSION --file ../../expiration/Dockerfile-prod ../../expiration
 docker push $CONTAINER_REGISTRY/expiration:$VERSION
@@ -54,16 +54,14 @@ kubectl delete secret jwt-secret
 kubectl create secret generic stripe-secret --from-literal=STRIPE_KEY=$STRIPE_KEY
 kubectl create secret generic jwt-secret --from-literal=JWT_KEY=$JWT_KEY
 
-envsubst < ../k8s/auth-depl.yaml | kubectl apply -f -
-envsubst < ../k8s/auth-mongo-depl.yaml | kubectl apply -f -
-envsubst < ../k8s/client-depl.yaml | kubectl apply -f -
-envsubst < ../k8s/expiration-depl.yaml | kubectl apply -f -
-envsubst < ../k8s/expiration-redis-depl.yaml | kubectl apply -f -
-envsubst < ../k8s/nats-depl.yaml | kubectl apply -f -
-envsubst < ../k8s/orders-depl.yaml | kubectl apply -f -
-envsubst < ../k8s/orders-mongo-depl.yaml | kubectl apply -f -
-envsubst < ../k8s/payments-depl.yaml | kubectl apply -f -
-envsubst < ../k8s/payments-mongo-depl.yaml | kubectl apply -f -
-envsubst < ../k8s/tickets-depl.yaml | kubectl apply -f -
-envsubst < ../k8s/tickets-mongo-depl.yaml | kubectl apply -f -
-envsubst < ../k8s-prod/ingress-srv.yaml | kubectl apply -f -
+# Temporary directory for the processed manifests
+GENERATED_DIR=./k8s-generated
+rm -rf $GENERATED_DIR
+mkdir $GENERATED_DIR
+
+# Process each manifest
+for file in ../k8s/* ../k8s-prod/*; do
+  envsubst < "$file" > "$GENERATED_DIR/$(basename "$file")"
+done
+
+kubectl apply -f $GENERATED_DIR

@@ -3,11 +3,10 @@ kind: Config
 deploy:
   kubectl:
     manifests:
-      - ./scripts/k8s/*
-      - ./scripts/k8s-dev/*
+      - ./scripts/local/k8s-generated/*
 build:
   local:
-    push: false
+    push: true
   artifacts:
     - image: skyglass/auth
       context: auth
@@ -17,7 +16,7 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
-    - image: skyglass/ticketing-client
+    - image: skyglass/client
       context: client
       docker:
         dockerfile: Dockerfile

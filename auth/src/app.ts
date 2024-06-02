@@ -10,12 +10,13 @@ import { signoutRouter } from './routes/signout';
 import { signupRouter } from './routes/signup';
 
 const app = express();
+const inProduction = process.env.NODE_ENV === "production";
 app.set('trust proxy', true);
 app.use(json());
 app.use(
   cookieSession({
     signed: false,
-    secure: true,
+    secure: inProduction,
   })
 );
 
