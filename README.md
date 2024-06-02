@@ -193,9 +193,9 @@ STRIPE_KEY="$STRIPE_KEY"
 - Make sure you provide your email for CA cluster issuer Kubernetes resource (see more details in the article)
 - Make sure you installed ingress controller with helm
 - Make sure you installed all other kubernetes resources and followed other instructions in the article
-- You can find production Ingress Kubernetes Resource in `k8s/prod/ingress-srv.yaml`. This resource will be applied with `skaffold-prod.sh` or `skaffold-prod-dev.sh` scripts. Make sure that you replaced `skycomposer.net` with your registered domain name
+- You can find production Ingress Kubernetes Resource in `k8s/prod/ingress-srv.yaml`. This resource will be applied with `skaffold-prod.sh` or `skaffold-dev.sh` scripts. Make sure that you replaced `skycomposer.net` with your registered domain name
 
-- run `sh skaffold-prod-dev.sh`
+- run `sh skaffold-dev.sh`
 
 - this script will build docker images, push them to container registry and deploy images to production kubernetes cluster with hot reloading of your code changes
 
@@ -215,9 +215,9 @@ STRIPE_KEY="$STRIPE_KEY"
 
 - run `sh skaffold-prod.sh` to deploy final changes to production
 
-- The only difference between `sh skaffold-prod.sh` and `sh skaffold-prod-dev.sh` is that `sh skaffold-prod-dev.sh` allows hot reloading of your code changes on production! Try to make any code change with your IDE and you will immediately see this change on production!
+- The only difference between `sh skaffold-prod.sh` and `sh skaffold-dev.sh` is that `sh skaffold-dev.sh` allows hot reloading of your code changes on production! Try to make any code change with your IDE and you will immediately see this change on production!
 
-- If you run `sh skaffold-prod-dev.sh` you will see logs in real-time. After closing the cli window, all kubernetes resources will be destroyed! Therefore, in order to deploy final changes to production use `sh skaffold-prod.sh`. You will not have hot reloading with `sh skaffold-prod.sh`, but kubernetes resources will not be destroyed after you close cli window.
+- If you run `sh skaffold-dev.sh` you will see logs in real-time. After closing the cli window, all kubernetes resources will be destroyed! Therefore, in order to deploy final changes to production use `sh skaffold-prod.sh`. You will not have hot reloading with `sh skaffold-prod.sh`, but kubernetes resources will not be destroyed after you close cli window.
 
 ## Github Actions Deployment Pipeline Setup
 
