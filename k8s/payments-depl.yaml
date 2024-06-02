@@ -15,7 +15,7 @@ spec:
       containers:
         - name: payments
           image: $CONTAINER_REGISTRY/payments:$VERSION
-          imagePullPolicy: Always          
+          imagePullPolicy: IfNotPresent          
           env:
             - name: NATS_CLIENT_ID
               valueFrom:

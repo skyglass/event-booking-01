@@ -15,7 +15,7 @@ spec:
       containers:
         - name: auth
           image: $CONTAINER_REGISTRY/auth:$VERSION
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           env:
             - name: MONGO_URI
               value: 'mongodb://auth-mongo-srv:27017/auth'

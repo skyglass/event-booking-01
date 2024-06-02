@@ -15,10 +15,13 @@ spec:
       containers:
         - name: client
           image: $CONTAINER_REGISTRY/client:$VERSION
-          imagePullPolicy: Always    
+          imagePullPolicy: IfNotPresent    
           env:
             - name: BASE_URL
-              value: $BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: base-url-config
+                  key: BASE_URL
 ---
 apiVersion: v1
 kind: Service

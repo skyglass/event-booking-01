@@ -1,11 +1,11 @@
 #!/bin/bash
 
-if [ -f ./env/.env.local ]; then
+if [ -f ./env/.env.prod ]; then
   set -o allexport
-  source ./env/.env.local
+  source ./env/.env.prod
   set +o allexport
 else
-  echo ".env.local file not found"
+  echo ".env.prod file not found"
   exit 1
 fi
 
@@ -27,7 +27,7 @@ rm -rf $GENERATED_DIR
 mkdir $GENERATED_DIR
 
 # Process each manifest
-for file in ./k8s/* ./k8s/dev/*; do
+for file in ./k8s/* ./k8s/prod/*; do
   if [ -d "$file" ]; then
     continue
   fi

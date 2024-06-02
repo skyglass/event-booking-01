@@ -6,52 +6,52 @@ deploy:
       - ./k8s/generated/*
 build:
   local:
-    push: true
+    push: $DOCKER_PUSH
   artifacts:
-    - image: eventbooking.azurecr.io/auth
+    - image: $CONTAINER_REGISTRY/auth
       context: auth
       docker:
-        dockerfile: Dockerfile-prod
+        dockerfile: $DOCKER_FILE_NAME
       sync:
         manual:
           - src: 'src/**/*.ts'
             dest: .
-    - image: eventbooking.azurecr.io/client
+    - image: $CONTAINER_REGISTRY/client
       context: client
       docker:
-        dockerfile: Dockerfile-prod
+        dockerfile: $DOCKER_FILE_NAME
       sync:
         manual:
           - src: '**/*.js'
             dest: .
-    - image: eventbooking.azurecr.io/tickets
+    - image: $CONTAINER_REGISTRY/tickets
       context: tickets
       docker:
-        dockerfile: Dockerfile-prod
+        dockerfile: $DOCKER_FILE_NAME
       sync:
         manual:
           - src: 'src/**/*.ts'
             dest: .
-    - image: eventbooking.azurecr.io/orders
+    - image: $CONTAINER_REGISTRY/orders
       context: orders
       docker:
-        dockerfile: Dockerfile-prod
+        dockerfile: $DOCKER_FILE_NAME
       sync:
         manual:
           - src: 'src/**/*.ts'
             dest: .
-    - image: eventbooking.azurecr.io/expiration
+    - image: $CONTAINER_REGISTRY/expiration
       context: expiration
       docker:
-        dockerfile: Dockerfile-prod
+        dockerfile: $DOCKER_FILE_NAME
       sync:
         manual:
           - src: 'src/**/*.ts'
             dest: .
-    - image: eventbooking.azurecr.io/payments
+    - image: $CONTAINER_REGISTRY/payments
       context: payments
       docker:
-        dockerfile: Dockerfile-prod
+        dockerfile: $DOCKER_FILE_NAME
       sync:
         manual:
           - src: 'src/**/*.ts'

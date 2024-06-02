@@ -15,7 +15,7 @@ spec:
       containers:
         - name: expiration
           image: $CONTAINER_REGISTRY/expiration:$VERSION
-          imagePullPolicy: Always          
+          imagePullPolicy: IfNotPresent          
           env:
             - name: NATS_CLIENT_ID
               valueFrom:

@@ -15,7 +15,7 @@ spec:
       containers:
         - name: tickets
           image: $CONTAINER_REGISTRY/tickets:$VERSION
-          imagePullPolicy: Always          
+          imagePullPolicy: IfNotPresent          
           env:
             - name: NATS_CLIENT_ID
               valueFrom:

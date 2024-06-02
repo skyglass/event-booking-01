@@ -21,7 +21,6 @@ jobs:
       REGISTRY_PW: ${{ secrets.REGISTRY_PW  }}
       NAME: client
       DIRECTORY: client
-      BASE_URL: https://skycomposer.net
     steps:
       
       # Checks-out your repository under $GITHUB_WORKSPACE.

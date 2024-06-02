@@ -1,0 +1,61 @@
+local:
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.4.0/deploy/static/provider/cloud/deploy.yaml
+
+
+
+prod:
+kubectl create namespace public-ingress
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+helm upgrade --install ingress-nginx ingress-nginx \
+  --repo https://kubernetes.github.io/ingress-nginx \
+  --namespace public-ingress \
+  --set controller.config.http2=true \
+  --set controller.config.http2-push="on" \
+  --set controller.config.http2-push-preload="on" \
+  --set controller.ingressClassByName=true \
+  --set controller.ingressClassResource.controllerValue=k8s.io/ingress-nginx \
+  --set controller.ingressClassResource.enabled=true \
+  --set controller.ingressClassResource.name=public \
+  --set controller.service.externalTrafficPolicy=Local \
+  --set controller.setAsDefaultIngress=true
+
+  # Label the cert-manager namespace to disable resource validation
+kubectl label namespace public-ingress cert-manager.io/disable-validation=true
+# Add the Jetstack Helm repository
+helm repo add jetstack https://charts.jetstack.io
+# Update your local Helm chart repository cache
+helm repo update
+# Install CRDs with kubectl
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.11.0/cert-manager.crds.yaml
+# Install the cert-manager Helm chart
+helm install cert-manager jetstack/cert-manager \
+  --namespace public-ingress \
+  --version v1.11.0
+
+go to ./scripts/production
+
+create cluster-issuer.yaml:
+
+# Cluster Issuer
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-production
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: skyglass2001@gmail.com
+    privateKeySecretRef:
+      name: letsencrypt-production
+    solvers:
+      - http01:
+          ingress:
+            class: public
+
+kubectl apply -f cluster-issuer.yaml
+
+kubectl edit ing cm-acme-http-solver-92687

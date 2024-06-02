@@ -19,4 +19,4 @@ set -u # or set -o nounset
 : "$NAME"
 : "$VERSION"
 
-envsubst < ./scripts/k8s/${NAME}-depl.yaml | kubectl apply -f -
+envsubst < ./k8s/${NAME}-depl.yaml | kubectl apply -f -
