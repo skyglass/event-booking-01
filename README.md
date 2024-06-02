@@ -134,7 +134,7 @@ This script will build docker images and start local kubernetes environment with
 - Congratulations! You successfuly tested `Ticketing App` locally!
 
 
-## Azure Production Environment Setup:
+## Azure Production Kubernetes Environment Setup with Skaffold:
 
 - create `terraform.auto.tfvars` file in `infra` folder and provide following parameters:
 
