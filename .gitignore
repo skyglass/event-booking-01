@@ -91,4 +91,4 @@ graphql_schema.json
 out/
 
 env/
-skaffold.yaml
+skaffold*.yaml
