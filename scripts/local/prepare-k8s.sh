@@ -27,7 +27,7 @@ rm -rf $GENERATED_DIR
 mkdir $GENERATED_DIR
 
 # Process each manifest
-for file in ./k8s/* ./k8s/dev/*; do
+for file in ./k8s/* ./k8s/local/*; do
   if [ -d "$file" ]; then
     continue
   fi

@@ -18,7 +18,7 @@
     <li>✅ <b>Event-Driven Microservices with Data Replication and Concurrency Control</b></li>     
     <li>✅ <b>MongoDB Database</b></li>
     <li>✅ <b>Mongoose MongoDB Object Modeling for Node.js</b></li> 
-    <li>📖 <b>NATS Messaging System</b></li>
+    <li>✅ <b>NATS Messaging System</b></li>
     <li>✅ <b>Custom Authentication Service with JWT Tokens</b></li>
     <li>✅ <b>Custom Authorization Server</b></li>
     <li>✅ <b>Stripe Payment Infrastructure</b></li>   
@@ -55,14 +55,14 @@
 
 - make sure you have your own Github Account
 
-### Step-05: Prepare Source Code and Github Actions Workflow:
+### Step-04: Prepare Source Code and Github Actions Workflow:
 
-- Edit "**.github/workflows/application.yaml**" file: replace "**master**" with the name of your main branch (you can change default main branch name in github repository settings)
+- Edit "**.github/workflows/deploy-*.yaml**" files: replace "**master**" with the name of your main branch (you can change default main branch name in github repository settings)
 
-- Edit "**k8s/prod/ingress-srv.yaml**" file: replace "**skycomposer.net**" with the name of your registered domain (see **Step-06**  and **Azure Production Environment Setup** for more details)
+- Edit "**k8s/prod/ingress-srv.yaml**" file: replace "**skycomposer.net**" with the name of your registered domain (see **Step-05**  and **Azure Production Environment Setup** for more details)
 
 
-### Step-06: Register your domain:
+### Step-05: Register your domain:
 
 - You need a registered domain to provide TLS connection with trusted Certificate Authority.
 
@@ -71,12 +71,9 @@ This article will show you how to configure TLS on AKS with LetsEncrypt for any 
 
 - Make sure that you know how to create Hosted Zone and Record A for your domain provider.
 
-- If you don't want to register domain, see my previous article for more details: https://github.com/skyglass/food-finder-01 
-This article will show you how to create Load Balancer Service with EXTERNAL_IP (In this case you don't need Ingress Resource on AKS)
-
 - For more details, see `Azure Production Environment Setup`
 
-### Step-07: Finish Udemy Course "Microservices with Node JS and React":
+### Step-06: Finish Udemy Course "Microservices with Node JS and React":
 
 - If you need help on Microservices with Node JS and React, see more details in this course: https://www.udemy.com/course/microservices-with-node-js-and-react
 - I strongly recommend you finish this course first, before following this guide!
@@ -95,9 +92,11 @@ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.4.0/deploy/static/provider/cloud/deploy.yaml
 ```
-These commands will install nginx ingress controller to your local kubernetes cluster. You need nginx ingress controller for your local kubernetes ingress resource to work correctly (see `k8s/dev/ingress-srv.yaml`for more information on your local kubernetes ingress resource)
+These commands will install nginx ingress controller to your local kubernetes cluster. You need nginx ingress controller for your local kubernetes ingress resource to work correctly (see `k8s/local/ingress-srv.yaml`for more information on your local kubernetes ingress resource)
 
-- create `.env.local` file in `env` folder and provide following parameters:
+- create `env` folder in the root of the project
+
+- create `.env.local` file in `env` folder and provide the following parameters:
 
 ```
 CONTAINER_REGISTRY="eventbooking.azurecr.io" (provide your own container registry, see **Azure Production Environment Setup** for more details)
@@ -171,6 +170,8 @@ docker login {login_server}
 
 - you can find docker login server, username and password in Azure Cloud (go to Container Registry -> Settings -> Access Keys)
 
+- create `env` folder in the root of the project
+
 - in `env` folder create `.env.prod` file and set the following environment variables:
 
 ```
@@ -178,7 +179,7 @@ CONTAINER_REGISTRY="eventbooking.azurecr.io"  (provide your own globally unique 
 DOCKER_FILE_NAME="Dockerfile-prod"
 DOCKER_PUSH="true"
 VERSION="latest"
-BASE_URL="https://skycomposer.net" (provide your own domain name, see `Step-06` and notes below for more details)
+BASE_URL="https://skycomposer.net" (provide your own domain name, see `Step-05` and notes below for more details)
 
 JWT_KEY="$JWT_KEY"
 STRIPE_KEY="$STRIPE_KEY"
@@ -191,13 +192,13 @@ STRIPE_KEY="$STRIPE_KEY"
  
 - register your domain and enable TLS on AKS Ingress with Lestencrypt: https://medium.com/@jainchirag8001/tls-on-aks-ingress-with-letsencrypt-f42d65725a3
 - Make sure you provide your email for CA cluster issuer Kubernetes resource (see more details in the article)
-- Make sure you installed ingress controller with helm
+- Make sure you installed ingress controller with helm (see more details in the article)
 - Make sure you installed all other kubernetes resources and followed other instructions in the article
 - You can find production Ingress Kubernetes Resource in `k8s/prod/ingress-srv.yaml`. This resource will be applied with `skaffold-prod.sh` or `skaffold-dev.sh` scripts. Make sure that you replaced `skycomposer.net` with your registered domain name
 
 - run `sh skaffold-dev.sh`
 
-- this script will build docker images, push them to container registry and deploy images to production kubernetes cluster with hot reloading of your code changes
+- this script will build docker images, push them to azure container registry and deploy images to production kubernetes cluster with hot reloading of your code changes
 
 - run `kubectl get pods` and make sure that all containers are RUNNING
 
