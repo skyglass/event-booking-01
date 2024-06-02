@@ -22,7 +22,7 @@ export default ({ currentUser }) => {
   return (
     <nav className="navbar navbar-light bg-light">
       <Link className="navbar-brand" href="/">
-        SkyComposer 2
+        SkyComposer
       </Link>
 
       <div className="d-flex justify-content-end">
